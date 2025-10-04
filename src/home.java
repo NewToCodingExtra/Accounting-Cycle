@@ -13,7 +13,8 @@ import javax.swing.JOptionPane;
 import java.awt.*;
 public class home extends javax.swing.JFrame {
 
-    public int z = 0;
+    private int z = 0;
+    private int yButton = 0;
     private int project_key;
     private boolean journalEntryUsed = false;
     private boolean ledgerIsUsed = false;
@@ -26,6 +27,7 @@ public class home extends javax.swing.JFrame {
     Ledger ld;
     Adjustments ad;
     AdjustedTB ATB;
+    
     /**
      * Creates new form home
      */
@@ -40,6 +42,8 @@ public class home extends javax.swing.JFrame {
         jButton8.setVisible(false);
         jButton9.setVisible(false);
         jButton10.setVisible(false);
+        jButton11.setVisible(false);
+        jButton12.setVisible(false);
         
         jLabel4.setVisible(false);
         jLabel5.setVisible(false);
@@ -80,6 +84,8 @@ public class home extends javax.swing.JFrame {
         jButton7 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
+        jButton11 = new javax.swing.JButton();
+        jButton12 = new javax.swing.JButton();
         jButton9 = new javax.swing.JButton();
         jButton10 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -268,6 +274,19 @@ public class home extends javax.swing.JFrame {
         });
         getContentPane().add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 50, -1, -1));
 
+        jButton11.setText("jButton11");
+        jButton11.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        getContentPane().add(jButton11, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 260, 450, 400));
+
+        jButton12.setText("jButton11");
+        jButton12.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton12ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton12, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 260, 450, 400));
+
         jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/logout.png"))); // NOI18N
         jButton9.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -350,8 +369,8 @@ public class home extends javax.swing.JFrame {
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel11.setText("Export");
-        getContentPane().add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 120, 68, -1));
+        jLabel11.setText("FS");
+        getContentPane().add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 120, 68, -1));
 
         jLabel12.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel12.setText("Logout");
@@ -638,11 +657,11 @@ public class home extends javax.swing.JFrame {
         ad.setVisible(true);
         
     }//GEN-LAST:event_jButton7ActionPerformed
-
+    
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         // TODO add your handling code here:
         if(!journalEntryUsed) {
-            JOptionPane.showMessageDialog(null, "Can't import, there is no journal entries!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "No financial statement!, open or create entries first!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
         if(UTBIsOpen) {
@@ -655,6 +674,16 @@ public class home extends javax.swing.JFrame {
             ATBIsOpen = false;
             return;
         }
+        if(yButton == 0) {
+            jButton11.setVisible(true);
+            jButton12.setVisible(true);
+            yButton = 1;
+        } else {
+            jButton11.setVisible(false);
+            jButton12.setVisible(false);
+            yButton = 0;
+        }
+        
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseEntered
@@ -825,6 +854,10 @@ public class home extends javax.swing.JFrame {
             ATBIsOpen = false;
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton12ActionPerformed
       
     /**
      * @param args the command line arguments
@@ -864,6 +897,8 @@ public class home extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
+    private javax.swing.JButton jButton11;
+    private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
