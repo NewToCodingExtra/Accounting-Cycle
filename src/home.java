@@ -275,11 +275,16 @@ public class home extends javax.swing.JFrame {
         });
         getContentPane().add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 50, -1, -1));
 
-        jButton11.setText("jButton11");
+        jButton11.setText("Financial Statement of Profit or Loss");
         jButton11.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton11ActionPerformed(evt);
+            }
+        });
         getContentPane().add(jButton11, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 260, 450, 400));
 
-        jButton12.setText("jButton11");
+        jButton12.setText("Financial Statement of Financial Position");
         jButton12.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton12.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -717,8 +722,6 @@ public class home extends javax.swing.JFrame {
         timer.start();
     }
 
-
-
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         // TODO add your handling code here:
         if(!journalEntryUsed) {
@@ -744,8 +747,7 @@ public class home extends javax.swing.JFrame {
             jButton12.setVisible(false);
             yButton = 0;
         }
-
-        
+     
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseEntered
@@ -920,6 +922,10 @@ public class home extends javax.swing.JFrame {
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton12ActionPerformed
+
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton11ActionPerformed
       
     /**
      * @param args the command line arguments
