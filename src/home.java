@@ -11,6 +11,7 @@
  */
 import javax.swing.JOptionPane;
 import java.awt.*;
+import javax.swing.Timer;
 public class home extends javax.swing.JFrame {
 
     private int z = 0;
@@ -657,7 +658,67 @@ public class home extends javax.swing.JFrame {
         ad.setVisible(true);
         
     }//GEN-LAST:event_jButton7ActionPerformed
-    
+    private void animateExpandWithImpact(javax.swing.JButton button, int targetWidth, int targetHeight) {
+        button.setVisible(true);
+        button.setBounds(button.getX(), button.getY(), 0, 0); // start tiny
+        final int x = button.getX();
+        final int y = button.getY();
+        Timer timer = new Timer(15, null); // ~60fps
+
+        timer.addActionListener(new java.awt.event.ActionListener() {
+            int w = 0, h = 0;
+            int phase = 0; // 0 = grow, 1 = overshoot, 2 = settle, 3 = shake
+            int shakeCount = 0;
+
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                switch (phase) {
+                    case 0:  
+                        if (w < targetWidth || h < targetHeight) {
+                            w = Math.min(w + 6, targetWidth);
+                            h = Math.min(h + 6, targetHeight);
+                            button.setBounds(x, y, w, h);
+                        } else {
+                            phase = 1;  
+                        }
+                        break;
+
+                    case 1:  
+                        w = targetWidth + 10;
+                        h = targetHeight + 5;
+                        button.setBounds(x, y, w, h);
+                        phase = 2;
+                        break;
+
+                    case 2:  
+                        w = targetWidth;
+                        h = targetHeight;
+                        button.setBounds(x, y, w, h);
+                        phase = 3;  
+                        break;
+
+                    case 3:  
+                        if (shakeCount < 6) {
+                            int offset = (shakeCount % 2 == 0 ? 5 : -5);
+                            button.setLocation(x + offset, y);
+                            shakeCount++;
+                        } else {
+                            button.setLocation(x, y); 
+                            ((Timer) e.getSource()).stop();
+                        }
+                        break;
+                }
+
+                button.revalidate();
+                button.repaint();
+            }
+        });
+
+        timer.start();
+    }
+
+
+
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         // TODO add your handling code here:
         if(!journalEntryUsed) {
@@ -674,15 +735,16 @@ public class home extends javax.swing.JFrame {
             ATBIsOpen = false;
             return;
         }
-        if(yButton == 0) {
-            jButton11.setVisible(true);
-            jButton12.setVisible(true);
+        if (yButton == 0) {
+            animateExpandWithImpact(jButton11, 450, 400);  
+            animateExpandWithImpact(jButton12, 450, 400);
             yButton = 1;
         } else {
             jButton11.setVisible(false);
             jButton12.setVisible(false);
             yButton = 0;
         }
+
         
     }//GEN-LAST:event_jButton8ActionPerformed
 
