@@ -253,10 +253,12 @@ public class AdjustedTB extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setAlwaysOnTop(true);
         setLocation(new java.awt.Point(parentX + 290, parentY + 170));
+        setMaximumSize(new java.awt.Dimension(830, 560));
         setMinimumSize(new java.awt.Dimension(830, 560));
         setUndecorated(true);
         setResizable(false);
@@ -389,6 +391,10 @@ public class AdjustedTB extends javax.swing.JFrame {
         getContentPane().add(jSeparator1);
         jSeparator1.setBounds(10, 110, 810, 10);
 
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/all page background image.png"))); // NOI18N
+        getContentPane().add(jLabel4);
+        jLabel4.setBounds(0, 0, 800, 670);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -431,6 +437,7 @@ public class AdjustedTB extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
