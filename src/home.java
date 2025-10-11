@@ -681,6 +681,8 @@ public class home extends javax.swing.JFrame {
             return;
         }
         if(!UTBIsOpen) {
+            if (UTB == null) // ✅ recreate if disposed
+                UTB = new UnadjustTB(this);
             int parentX = this.getX();
             int parentY = this.getY();
             UTB.setVisible(true);
@@ -985,6 +987,8 @@ public class home extends javax.swing.JFrame {
             return;
         }
         if(!ATBIsOpen) {
+            if (ATB == null) // ✅ recreate if disposed
+                ATB = new AdjustedTB(this);
             int parentX = this.getX();
             int parentY = this.getY();
             ATB.setVisible(true);
@@ -1008,10 +1012,17 @@ public class home extends javax.swing.JFrame {
             yButton = 0;
         }
         if(!SFPisOpen) {
+            if (SFP == null) //  
+                SFP = new SFPosition(this);
             int parentX = this.getX();
             int parentY = this.getY();
-            SFP.setVisible(true);
-            SFP.setLocation(new java.awt.Point(parentX + 290, parentY + 170));
+            int parentWidth = this.getWidth();
+
+            int childWidth = SFP.getWidth();  
+            int centerX = parentX + (parentWidth - childWidth) / 2;
+
+            SFP.setLocation(centerX, parentY + 170);  
+            SFP.setVisible(true); 
             SFP.setProjectId(project_key);
             SFP.loadFPostion();
             SFPisOpen = true;
