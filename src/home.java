@@ -469,6 +469,12 @@ public class home extends javax.swing.JFrame {
             SFP = null;
             SFPisOpen = false;
         }
+        if(SPLisOpen) {
+            SPL.dispose();
+            SPL = null;
+            SPLisOpen = false;
+            return;
+        }
         int a = JOptionPane.showConfirmDialog(null, "Do you really want to close the program?","Select", JOptionPane.YES_NO_OPTION);
         if(a == 0) {
             System.exit(0);
@@ -519,6 +525,12 @@ public class home extends javax.swing.JFrame {
             SFP.dispose();
             SFP = null;
             SFPisOpen = false;
+        }
+        if(SPLisOpen) {
+            SPL.dispose();
+            SPL = null;
+            SPLisOpen = false;
+            return;
         }
         int a = JOptionPane.showConfirmDialog(null, "Do you really want to logout?","Select", JOptionPane.YES_NO_OPTION);
         if(a == 0) {

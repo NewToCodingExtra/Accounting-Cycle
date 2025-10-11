@@ -91,7 +91,7 @@ public class AskForAddDetails extends javax.swing.JDialog {
         setType(java.awt.Window.Type.POPUP);
         getContentPane().setLayout(null);
 
-        label1.setAlignment(java.awt.Label.CENTER);
+        label1.setAlignment(1);
         label1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         label1.setText("INPUT THE DETAILS");
         getContentPane().add(label1);
@@ -139,8 +139,6 @@ public class AskForAddDetails extends javax.swing.JDialog {
         jLabel3.setText("Start of accounting (Year):");
         getContentPane().add(jLabel3);
         jLabel3.setBounds(60, 300, 217, 17);
-
-        jYearChooser1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         getContentPane().add(jYearChooser1);
         jYearChooser1.setBounds(60, 320, 68, 22);
 
@@ -169,7 +167,7 @@ public class AskForAddDetails extends javax.swing.JDialog {
         button1.setBounds(60, 190, 90, 22);
 
         button3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        button3.setText("Interval");
+        button3.setText("Interim");
         button3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 button3ActionPerformed(evt);
@@ -248,7 +246,7 @@ public class AskForAddDetails extends javax.swing.JDialog {
             if (button1.isSelected()) {
                 accountingPeriod = "Annual Reporting";
             } else if (button3.isSelected()) {
-                accountingPeriod = "Interval Reporting";
+                accountingPeriod = "Interim Reporting";
             } else {
                 throw new IllegalArgumentException("Please choose the reporting period type!");
             }

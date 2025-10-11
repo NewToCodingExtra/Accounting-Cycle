@@ -70,7 +70,7 @@ public class AdjustedTB extends javax.swing.JFrame {
             } else if ("Fiscal Year".equalsIgnoreCase(periodType)) {
                 headerText3 = "For the year ended " + getEndDate(startMonth, year, 12);
             }
-        } else if ("Interval Reporting".equalsIgnoreCase(reportingPeriod)) {
+        } else if ("Interim Reporting".equalsIgnoreCase(reportingPeriod)) {
             
             switch (periodType) {
                 case "Quarterly" -> headerText3 = "For the quarterly ended " + getEndDate(startMonth, year, 3); 
