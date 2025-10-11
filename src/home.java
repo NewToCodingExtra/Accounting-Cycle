@@ -473,7 +473,6 @@ public class home extends javax.swing.JFrame {
             SPL.dispose();
             SPL = null;
             SPLisOpen = false;
-            return;
         }
         int a = JOptionPane.showConfirmDialog(null, "Do you really want to close the program?","Select", JOptionPane.YES_NO_OPTION);
         if(a == 0) {
