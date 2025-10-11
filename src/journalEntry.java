@@ -61,13 +61,11 @@ import javax.swing.WindowConstants;
         JEA.jComboBoxEditor(textField1, jComboBox1);
         
         jButton2.setVisible(false);
-        jButton3.setVisible(false);
         jButton4.setVisible(false);
         jButton5.setVisible(false);
         
         jLabel1.setVisible(false);
         jLabel2.setVisible(false);
-        jLabel3.setVisible(false);
         jLabel4.setVisible(false);
         jLabel5.setVisible(false);
         
@@ -116,12 +114,10 @@ import javax.swing.WindowConstants;
 
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -207,31 +203,6 @@ import javax.swing.WindowConstants;
         getContentPane().add(jButton2);
         jButton2.setBounds(150, 30, 66, 67);
 
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view_output_icon.png"))); // NOI18N
-        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton3MouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jButton3MouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                jButton3MouseExited(evt);
-            }
-        });
-        jButton3.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentShown(java.awt.event.ComponentEvent evt) {
-                jButton3ComponentShown(evt);
-            }
-        });
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jButton3);
-        jButton3.setBounds(230, 30, 66, 67);
-
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/logout.png"))); // NOI18N
         jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -252,7 +223,7 @@ import javax.swing.WindowConstants;
             }
         });
         getContentPane().add(jButton4);
-        jButton4.setBounds(310, 30, 66, 67);
+        jButton4.setBounds(230, 30, 66, 67);
 
         jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/exit button.png"))); // NOI18N
         jButton5.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -274,7 +245,7 @@ import javax.swing.WindowConstants;
             }
         });
         getContentPane().add(jButton5);
-        jButton5.setBounds(390, 30, 66, 67);
+        jButton5.setBounds(310, 30, 66, 67);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -288,26 +259,26 @@ import javax.swing.WindowConstants;
         getContentPane().add(jLabel1);
         jLabel1.setBounds(60, 120, 81, 20);
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("Ouput");
-        getContentPane().add(jLabel3);
-        jLabel3.setBounds(230, 120, 66, 20);
-
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("Logout");
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(310, 120, 66, 20);
+        jLabel4.setBounds(230, 120, 66, 20);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("Close");
         getContentPane().add(jLabel5);
-        jLabel5.setBounds(390, 120, 66, 20);
+        jLabel5.setBounds(310, 120, 66, 20);
 
         jTable1.getTableHeader().setReorderingAllowed(false);
-        jTable1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
+        jTable1.setBorder(javax.swing.BorderFactory.createTitledBorder(
+            javax.swing.BorderFactory.createEtchedBorder(), // border style
+            "", // title
+            javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
+            javax.swing.border.TitledBorder.DEFAULT_POSITION,
+            new java.awt.Font("Tahoma", java.awt.Font.BOLD, 14) // font
+        ));
         jTable1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {},
@@ -721,18 +692,6 @@ import javax.swing.WindowConstants;
         handleExitLogoutHome(1);//1 for logout
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-        hm.setProjectKey(projectId);
-       
-        handleExitLogoutHome(3);//for output
-    }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_jButton3MouseClicked
-
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
 
@@ -763,7 +722,6 @@ import javax.swing.WindowConstants;
             }
         } else {
             jButton2.setVisible(false);
-            jButton3.setVisible(false);
             jButton4.setVisible(false);
             jButton5.setVisible(false);
 
@@ -775,21 +733,11 @@ import javax.swing.WindowConstants;
         // TODO add your handling code here:
         try{
                 Thread.sleep(10);
-                jButton3.setVisible(true);
-            }catch(Exception e) {
-            
-            }
-    }//GEN-LAST:event_jButton2ComponentShown
-
-    private void jButton3ComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jButton3ComponentShown
-        // TODO add your handling code here:
-        try{
-                Thread.sleep(10);
                 jButton4.setVisible(true);
             }catch(Exception e) {
             
             }
-    }//GEN-LAST:event_jButton3ComponentShown
+    }//GEN-LAST:event_jButton2ComponentShown
 
     private void jButton4ComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jButton4ComponentShown
         // TODO add your handling code here:
@@ -825,16 +773,6 @@ import javax.swing.WindowConstants;
         // TODO add your handling code here:
         jLabel2.setVisible(false);
     }//GEN-LAST:event_jButton2MouseExited
-
-    private void jButton3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseExited
-        // TODO add your handling code here:
-        jLabel3.setVisible(false);
-    }//GEN-LAST:event_jButton3MouseExited
-
-    private void jButton3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseEntered
-        // TODO add your handling code here:
-        jLabel3.setVisible(true);
-    }//GEN-LAST:event_jButton3MouseEntered
 
     private void jButton4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseEntered
         // TODO add your handling code here:
@@ -1682,7 +1620,6 @@ import javax.swing.WindowConstants;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
@@ -1696,7 +1633,6 @@ import javax.swing.WindowConstants;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;

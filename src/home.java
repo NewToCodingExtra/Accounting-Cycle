@@ -22,12 +22,14 @@ public class home extends javax.swing.JFrame {
     private boolean UTBIsOpen = false;
     private boolean ATBIsOpen = false;
     private boolean doLoadAdjustments = false;
+    private boolean SFPisOpen = false;
     
     journalEntry je;
     UnadjustTB UTB;
     Ledger ld;
     Adjustments ad;
     AdjustedTB ATB;
+    SFPosition SFP;
     
     /**
      * Creates new form home
@@ -62,6 +64,7 @@ public class home extends javax.swing.JFrame {
         UTB = new UnadjustTB(this);
         ad = new Adjustments(this, ld);
         ATB = new AdjustedTB(this);
+        SFP = new SFPosition(this);
         
         
         UTBWindowListener();
@@ -282,7 +285,7 @@ public class home extends javax.swing.JFrame {
                 jButton11ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton11, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 260, 450, 400));
+        getContentPane().add(jButton11, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 230, 450, 400));
 
         jButton12.setText("Financial Statement of Financial Position");
         jButton12.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -291,7 +294,7 @@ public class home extends javax.swing.JFrame {
                 jButton12ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton12, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 260, 450, 400));
+        getContentPane().add(jButton12, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 230, 450, 400));
 
         jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/logout.png"))); // NOI18N
         jButton9.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -414,6 +417,22 @@ public class home extends javax.swing.JFrame {
                     ATB.setVisible(true);  // restore ATB when parent restored
                 }
             }
+            if(yButton == 1) {
+                if ((e.getNewState() & Frame.ICONIFIED) == Frame.ICONIFIED) {
+                    jButton11.setVisible(false); // hide ATB when parent minimized
+                    jButton12.setVisible(false);
+                } else if ((e.getNewState() & Frame.NORMAL) == Frame.NORMAL) {
+                    jButton11.setVisible(true); // hide ATB when parent minimized
+                    jButton12.setVisible(true);  // restore ATB when parent restored
+                }
+            }
+            if (SFPisOpen && SFP != null) {
+                if ((e.getNewState() & Frame.ICONIFIED) == Frame.ICONIFIED) {
+                    SFP.setVisible(false); // hide ATB when parent minimized
+                } else if ((e.getNewState() & Frame.NORMAL) == Frame.NORMAL) {
+                    SFP.setVisible(true);  // restore ATB when parent restored
+                }
+            }
         });
     }
 
@@ -426,12 +445,19 @@ public class home extends javax.swing.JFrame {
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
         // TODO add your handling code here:
         if(UTBIsOpen) {
-            UTB.setVisible(false);
+            UTB.dispose();
+            UTB = null;
             UTBIsOpen = false;
         }
         if(ATBIsOpen) {
-            ATB.setVisible(false);
+            ATB.dispose();
+            ATB = null;
             ATBIsOpen = false; 
+        }
+        if(SFPisOpen) {
+            SFP.dispose();
+            SFP = null;
+            SFPisOpen = false;
         }
         int a = JOptionPane.showConfirmDialog(null, "Do you really want to close the program?","Select", JOptionPane.YES_NO_OPTION);
         if(a == 0) {
@@ -442,13 +468,20 @@ public class home extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         if(UTBIsOpen) {
-            UTB.setVisible(false);
+            UTB.dispose();
+            UTB = null;
             UTBIsOpen = false;
             return;
         }
         if(ATBIsOpen) {
-            ATB.setVisible(false);
-            ATBIsOpen = false;
+            ATB.dispose();
+            ATB = null;
+            return;
+        }
+        if(SFPisOpen) {
+            SFP.dispose();
+            SFP = null;
+            SFPisOpen = false;
             return;
         }
         JOptionPane.showMessageDialog(null, "You're in the home page already!", "Press OK", JOptionPane.INFORMATION_MESSAGE);
@@ -457,12 +490,19 @@ public class home extends javax.swing.JFrame {
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
         // TODO add your handling code here:
         if(UTBIsOpen) {
-            UTB.setVisible(false);
+            UTB.dispose();
+            UTB = null;
             UTBIsOpen = false;
         }
         if(ATBIsOpen) {
-            ATB.setVisible(false);
+            ATB.dispose();
+            ATB = null;
             ATBIsOpen = false;
+        }
+        if(SFPisOpen) {
+            SFP.dispose();
+            SFP = null;
+            SFPisOpen = false;
         }
         int a = JOptionPane.showConfirmDialog(null, "Do you really want to logout?","Select", JOptionPane.YES_NO_OPTION);
         if(a == 0) {
@@ -584,13 +624,21 @@ public class home extends javax.swing.JFrame {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         if(UTBIsOpen) {
-            UTB.setVisible(false);
+            UTB.dispose();
+            UTB = null;
             UTBIsOpen = false;
             return;
         }
         if(ATBIsOpen) {
-            ATB.setVisible(false);
+            ATB.dispose();
+            ATB = null;
             ATBIsOpen = false;
+            return;
+        }
+        if(SFPisOpen) {
+            SFP.dispose();
+            SFP = null;
+            SFPisOpen = false;
             return;
         }
         setVisible(false);
@@ -621,8 +669,15 @@ public class home extends javax.swing.JFrame {
             return;
         }
         if(ATBIsOpen) {
-            ATB.setVisible(false);
+            ATB.dispose();
+            ATB = null;
             ATBIsOpen = false;
+            return;
+        }
+        if(SFPisOpen) {
+            SFP.dispose();
+            SFP = null;
+            SFPisOpen = false;
             return;
         }
         if(!UTBIsOpen) {
@@ -634,7 +689,8 @@ public class home extends javax.swing.JFrame {
             UTB.loadUTB();
             UTBIsOpen = true;
         } else {
-            UTB.setVisible(false);
+            UTB.dispose();
+            UTB = null;
             UTBIsOpen = false;
         }
     }//GEN-LAST:event_jButton6ActionPerformed
@@ -650,13 +706,21 @@ public class home extends javax.swing.JFrame {
             return;
         }
         if(UTBIsOpen) {
-            UTB.setVisible(false);
+            UTB.dispose();
+            UTB = null;
             UTBIsOpen = false;
             return;
         }
         if(ATBIsOpen) {
-            ATB.setVisible(false);
+            ATB.dispose();
+            ATB = null;
             ATBIsOpen = false;
+            return;
+        }
+        if(SFPisOpen) {
+            SFP.dispose();
+            SFP = null;
+            SFPisOpen = false;
             return;
         }
         ad.setProjectId(project_key, doLoadAdjustments);
@@ -729,13 +793,21 @@ public class home extends javax.swing.JFrame {
             return;
         }
         if(UTBIsOpen) {
-            UTB.setVisible(false);
+            UTB.dispose();
+            UTB = null;
             UTBIsOpen = false;
             return;
         }
         if(ATBIsOpen) {
-            ATB.setVisible(false);
+            ATB.dispose();
+            ATB = null;
             ATBIsOpen = false;
+            return;
+        }
+        if(SFPisOpen) {
+            SFP.dispose();
+            SFP = null;
+            SFPisOpen = false;
             return;
         }
         if (yButton == 0) {
@@ -862,13 +934,21 @@ public class home extends javax.swing.JFrame {
             return;
         }
         if(UTBIsOpen) {
-            UTB.setVisible(false);
+            UTB.dispose();
+            UTB = null;
             UTBIsOpen = false;
             return;
         }
         if(ATBIsOpen) {
-            ATB.setVisible(false);
+            ATB.dispose();
+            ATB = null;
             ATBIsOpen = false;
+            return;
+        }
+        if(SFPisOpen) {
+            SFP.dispose();
+            SFP = null;
+            SFPisOpen = false;
             return;
         }
         if(!ledgerIsUsed) {
@@ -893,17 +973,17 @@ public class home extends javax.swing.JFrame {
             return;
         }
         if(UTBIsOpen) {
-            UTB.setVisible(false);
+            UTB.dispose();
+            UTB = null;
             UTBIsOpen = false;
             return;
         }
-        if(ATBIsOpen) {
-            ATB.setVisible(false);
-            ATBIsOpen = false;
+        if(SFPisOpen) {
+            SFP.dispose();
+            SFP = null;
+            SFPisOpen = false;
             return;
         }
-  
-        
         if(!ATBIsOpen) {
             int parentX = this.getX();
             int parentY = this.getY();
@@ -914,17 +994,43 @@ public class home extends javax.swing.JFrame {
             ATB.loadATB();
             ATBIsOpen = true;
         } else {
-            ATB.setVisible(false);
+            ATB.dispose();
+            ATB = null;
             ATBIsOpen = false;
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
         // TODO add your handling code here:
+        if(yButton == 1) {
+            jButton11.setVisible(false);
+            jButton12.setVisible(false);
+            yButton = 0;
+        }
+        if(!SFPisOpen) {
+            int parentX = this.getX();
+            int parentY = this.getY();
+            SFP.setVisible(true);
+            SFP.setLocation(new java.awt.Point(parentX + 290, parentY + 170));
+            SFP.setProjectId(project_key);
+            SFP.loadFPostion();
+            SFPisOpen = true;
+        } else {
+            SFP.dispose();
+            SFP = null;
+            SFPisOpen = false;
+        }
+        
+        
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
         // TODO add your handling code here:
+        if(yButton == 1) {
+            jButton11.setVisible(false);
+            jButton12.setVisible(false);
+            yButton = 0;
+        }
     }//GEN-LAST:event_jButton11ActionPerformed
       
     /**
