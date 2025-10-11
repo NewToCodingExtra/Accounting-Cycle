@@ -404,7 +404,7 @@ public class AskForAddDetails extends javax.swing.JDialog {
                 // Set accounting period radio buttons
                 if ("Annual Reporting".equalsIgnoreCase(period)) {
                     button1.setSelected(true);
-                } else if ("Interval Reporting".equalsIgnoreCase(period)) {
+                } else if ("Interim Reporting".equalsIgnoreCase(period)) {
                     button3.setSelected(true);
                 } 
                 jComboBox1.addItem(periodType);
