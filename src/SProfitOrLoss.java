@@ -38,7 +38,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Joshua
  */
-public class SFPosition extends javax.swing.JFrame {
+public class SProfitOrLoss extends javax.swing.JFrame {
 
     /**
      * Creates new form UnadjustTB
@@ -49,7 +49,7 @@ public class SFPosition extends javax.swing.JFrame {
     private int parentX;
     private int parentY;
     private boolean haveAdjustments = false;
-    public SFPosition(home hm) {
+    public SProfitOrLoss(home hm) {
         initComponents();
         this.hm = hm;
         
@@ -80,17 +80,17 @@ public class SFPosition extends javax.swing.JFrame {
         
           if ("Annual Reporting".equalsIgnoreCase(reportingPeriod)) {
             if ("Calendar Year".equalsIgnoreCase(periodType)) {
-                headerText3 = "As of December 31, " + year;
+                headerText3 = "For the year ended December 31, " + year;
             } else if ("Fiscal Year".equalsIgnoreCase(periodType)) {
-                headerText3 = "As of " + getEndDate(startMonth, year, 12);
+                headerText3 = "For the year ended " + getEndDate(startMonth, year, 12);
             }
         } else if ("Interval Reporting".equalsIgnoreCase(reportingPeriod)) {
             
             switch (periodType) {
-                case "Quarterly" -> headerText3 = "As of " + getEndDate(startMonth, year, 3); 
-                case "Semi-Annual" -> headerText3 = "As of " + getEndDate(startMonth, year, 6); 
-                case "Monthly" -> headerText3 = "As of " + getEndDate(startMonth, year, 1); 
-                default -> headerText3 = "As of ???"; 
+                case "Quarterly" -> headerText3 = "For the three months ended " + getEndDate(startMonth, year, 3); 
+                case "Semi-Annual" -> headerText3 = "For the six months ended " + getEndDate(startMonth, year, 6); 
+                case "Monthly" -> headerText3 = "For the month ended " + getEndDate(startMonth, year, 1); 
+                default -> headerText3 = "For the year ended ???"; 
             }
         }
         jLabel1.setText("\""+companyName+"\"");
@@ -123,7 +123,7 @@ public class SFPosition extends javax.swing.JFrame {
         }
     }
 
-    public void loadFPostion() {
+    public void loadIncomeStatement() {
         DecimalFormat pesoFormat = new DecimalFormat("₱ #,##0.00");
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
@@ -131,7 +131,6 @@ public class SFPosition extends javax.swing.JFrame {
         String tableName = "adjusted_ledger";
         String query = "SELECT account_name, debit_total, credit_total FROM " + tableName + " WHERE project_id = ?";
 
-        // Data storage
         Map<String, BigDecimal> accountBalances = new HashMap<>();
 
         try (Connection conn = DriverManager.getConnection(
@@ -149,240 +148,123 @@ public class SFPosition extends javax.swing.JFrame {
                     if (debit == null) debit = BigDecimal.ZERO;
                     if (credit == null) credit = BigDecimal.ZERO;
 
-                    // Store raw debit and credit separately
                     accountBalances.put(accountName + "_DEBIT", debit);
                     accountBalances.put(accountName + "_CREDIT", credit);
                 }
             }
 
-            // Classification maps
-            Set<String> currentAssets = new HashSet<>(Arrays.asList(
-                "Cash", "Accounts Recievable", "Allowance for Doubtful Accounts", 
-                "Inventory", "Allowance for Invetory Write-Down", "Office Supply"
+            // Define account classifications
+            Set<String> revenue = new HashSet<>(Arrays.asList(
+                "Sales Revenue", "Service Revenue", "Interest Income", "Rent Income",
+                "Dividend Income", "Miscellaneous Income", "Gain On Sale of Assets"
             ));
 
-            Set<String> nonCurrentAssets = new HashSet<>(Arrays.asList(
-                "Prepaid Rent Expense", "Prepaid Insurance Expense", "Prepaid Supplies Expense",
-                "Prepaid Subscription Expense", "Furniture & Fixture", 
-                "Accumulated Depreciation - Furniture & Fixture", "Equipment",
-                "Accumulated Depreciation - Equipment", "Vehicle",
-                "Accumulated Depreciation - Vehicle", "Machinery",
-                "Accumulated Depreciation - Machinery", "Building",
-                "Accumulated Depreciation - Building", "Land"
+            Set<String> contraRevenue = new HashSet<>(Arrays.asList(
+                "Sales Returns", "Sales Allowances", "Sales Discounts", "Loss On Sale of Assets"
             ));
 
-            Set<String> currentLiabilities = new HashSet<>(Arrays.asList(
-                "Accounts Payable", "Uneared Revenue", "Salaries Payable",
-                "Wages Payable", "Taxes Payable", "Dividends Payable"
+            Set<String> expenses = new HashSet<>(Arrays.asList(
+                "Rent Expense", "Salaries Expense", "Wages Expense",
+                "Utilities Expense", "Insurance Expense", "Supplies Expense", "Interest Expense",
+                "Subscription Expense", "Depreciation Expense - Furnitures & Fixture",
+                "Depreciation Expense - Equipment", "Depreciation Expense - Vehicle",
+                "Depreciation Expense - Machinery", "Depreciation Expense - Building",
+                "Advertising Expense", "Office Supply Expense", "Maintenance & Repairs Expense",
+                "Telephone Expense", "Postage Expense", "Travel Expense", "Miscellaneous Expense"
             ));
 
-            Set<String> nonCurrentLiabilities = new HashSet<>(Arrays.asList(
-                "Bonds Payable", "Notes Payable", "Loans Payable",
-                "Mortgage Payable", "Vehicle Loan Payable"
-            ));
+            // Calculate totals
+            BigDecimal grossSales = BigDecimal.ZERO;
+            BigDecimal salesDeductions = BigDecimal.ZERO;
+            BigDecimal totalExpenses = BigDecimal.ZERO;
 
-            Set<String> equity = new HashSet<>(Arrays.asList(
-                "Capital", "Retained Earnings", "Drawings", "Dividends", "Teasury Stock"
-            ));
+            // REVENUE SECTION
+            model.addRow(new Object[]{"REVENUE", "", ""});
 
-            Set<String> contraAssets = new HashSet<>(Arrays.asList(
-                "Allowance for Doubtful Accounts", "Allowance for Invetory Write-Down",
-                "Accumulated Depreciation - Furniture & Fixture",
-                "Accumulated Depreciation - Equipment", "Accumulated Depreciation - Vehicle",
-                "Accumulated Depreciation - Machinery", "Accumulated Depreciation - Building"
-            ));
-
-            Set<String> contraEquity = new HashSet<>(Arrays.asList(
-                "Drawings", "Dividends", "Teasury Stock"
-            ));
-
-            // Build sections
-            BigDecimal totalCurrentAssets = BigDecimal.ZERO;
-            BigDecimal totalNonCurrentAssets = BigDecimal.ZERO;
-            BigDecimal totalCurrentLiabilities = BigDecimal.ZERO;
-            BigDecimal totalNonCurrentLiabilities = BigDecimal.ZERO;
-            BigDecimal totalEquity = BigDecimal.ZERO;
-
-            // ASSETS section
-            model.addRow(new Object[]{"ASSETS", "", ""});
-
-            // Current Assets
-            model.addRow(new Object[]{"    Current:", "", ""});
+            // Calculate Gross Sales
             for (AccountTitle at : AccountTitle.ACCOUNT_TITLE) {
                 String name = at.getTitle();
-                if (currentAssets.contains(name)) {
-                    BigDecimal debit = accountBalances.getOrDefault(name + "_DEBIT", BigDecimal.ZERO);
+                if (revenue.contains(name)) {
                     BigDecimal credit = accountBalances.getOrDefault(name + "_CREDIT", BigDecimal.ZERO);
-
-                    if (debit.compareTo(BigDecimal.ZERO) != 0 || credit.compareTo(BigDecimal.ZERO) != 0) {
-                        BigDecimal balance;
-
-                        if (contraAssets.contains(name)) {
-                            // Contra-assets have CREDIT balance, display as negative (decreases assets)
-                            balance = credit.negate();
-                            String displayName = "        Less: " + name;
-                            model.addRow(new Object[]{displayName, "(" + pesoFormat.format(credit) + ")", ""});
-                        } else {
-                            // Normal assets have DEBIT balance
-                            balance = debit;
-                            model.addRow(new Object[]{"        " + name, pesoFormat.format(debit), ""});
-                        }
-
-                        totalCurrentAssets = totalCurrentAssets.add(balance);
-                    }
-                }
-            }
-            model.addRow(new Object[]{"", "", pesoFormat.format(totalCurrentAssets) + " "});
-            model.addRow(new Object[]{"", "", ""}); // spacing
-
-            // Non-Current Assets
-            model.addRow(new Object[]{"    Non-current:", "", ""});
-            for (AccountTitle at : AccountTitle.ACCOUNT_TITLE) {
-                String name = at.getTitle();
-                if (nonCurrentAssets.contains(name)) {
-                    BigDecimal debit = accountBalances.getOrDefault(name + "_DEBIT", BigDecimal.ZERO);
-                    BigDecimal credit = accountBalances.getOrDefault(name + "_CREDIT", BigDecimal.ZERO);
-
-                    if (debit.compareTo(BigDecimal.ZERO) != 0 || credit.compareTo(BigDecimal.ZERO) != 0) {
-                        BigDecimal balance;
-
-                        if (contraAssets.contains(name)) {
-                            // Contra-assets have CREDIT balance, display as negative (decreases assets)
-                            balance = credit.negate();
-                            String displayName = "        Less: " + name;
-                            model.addRow(new Object[]{displayName, "(" + pesoFormat.format(credit) + ")", ""});
-                        } else {
-                            // Normal assets have DEBIT balance
-                            balance = debit;
-                            model.addRow(new Object[]{"        " + name, pesoFormat.format(debit), ""});
-                        }
-
-                        totalNonCurrentAssets = totalNonCurrentAssets.add(balance);
-                    }
-                }
-            }
-            model.addRow(new Object[]{"", "", pesoFormat.format(totalNonCurrentAssets) + " "});
-
-            BigDecimal totalAssets = totalCurrentAssets.add(totalNonCurrentAssets);
-            model.addRow(new Object[]{"TOTAL ASSETS", "", pesoFormat.format(totalAssets) + " "});
-            model.addRow(new Object[]{"", "", ""}); // spacing
-
-            // LIABILITIES AND OWNER'S EQUITY section
-            model.addRow(new Object[]{"LIABILITIES AND OWNER'S EQUITY", "", ""});
-            model.addRow(new Object[]{"    LIABILITIES", "", ""});
-
-            // Current Liabilities
-            model.addRow(new Object[]{"    Current:", "", ""});
-            for (AccountTitle at : AccountTitle.ACCOUNT_TITLE) {
-                String name = at.getTitle();
-                if (currentLiabilities.contains(name)) {
-                    BigDecimal credit = accountBalances.getOrDefault(name + "_CREDIT", BigDecimal.ZERO);
-
                     if (credit.compareTo(BigDecimal.ZERO) != 0) {
-                        totalCurrentLiabilities = totalCurrentLiabilities.add(credit);
+                        grossSales = grossSales.add(credit);
                         model.addRow(new Object[]{"        " + name, pesoFormat.format(credit), ""});
                     }
                 }
             }
-            model.addRow(new Object[]{"", "", pesoFormat.format(totalCurrentLiabilities) + " "});
-            model.addRow(new Object[]{"", "", ""}); // spacing
 
-            // Non-Current Liabilities
-            model.addRow(new Object[]{"    Noncurrent:", "", ""});
+            // Sales Deductions (contra-revenue)
             for (AccountTitle at : AccountTitle.ACCOUNT_TITLE) {
                 String name = at.getTitle();
-                if (nonCurrentLiabilities.contains(name)) {
-                    BigDecimal credit = accountBalances.getOrDefault(name + "_CREDIT", BigDecimal.ZERO);
-
-                    if (credit.compareTo(BigDecimal.ZERO) != 0) {
-                        totalNonCurrentLiabilities = totalNonCurrentLiabilities.add(credit);
-                        model.addRow(new Object[]{"        " + name, pesoFormat.format(credit), ""});
+                if (contraRevenue.contains(name)) {
+                    BigDecimal debit = accountBalances.getOrDefault(name + "_DEBIT", BigDecimal.ZERO);
+                    if (debit.compareTo(BigDecimal.ZERO) != 0) {
+                        salesDeductions = salesDeductions.add(debit);
+                        String displayName = "        Less: " + name;
+                        model.addRow(new Object[]{displayName, "(" + pesoFormat.format(debit) + ")", ""});
                     }
                 }
             }
-            model.addRow(new Object[]{"", "", pesoFormat.format(totalNonCurrentLiabilities) + " "});
+
+            BigDecimal netSales = grossSales.subtract(salesDeductions);
+            model.addRow(new Object[]{"Net Sales", "", pesoFormat.format(netSales) + " "});
             model.addRow(new Object[]{"", "", ""}); // spacing
 
-            // EQUITY section
-            model.addRow(new Object[]{"    EQUITY", "", ""});
-
-            // Get Net Income/Loss from project_net_result table
-            BigDecimal netIncomeFromDB = BigDecimal.ZERO;
-            BigDecimal netLossFromDB = BigDecimal.ZERO;
-
-            String netResultQuery = "SELECT net_income, net_loss FROM project_net_result WHERE project_id = ?";
-            try (PreparedStatement psNet = conn.prepareStatement(netResultQuery)) {
-                psNet.setInt(1, projectId);
-                try (ResultSet rsNet = psNet.executeQuery()) {
-                    if (rsNet.next()) {
-                        netIncomeFromDB = rsNet.getBigDecimal("net_income");
-                        netLossFromDB = rsNet.getBigDecimal("net_loss");
-                        if (netIncomeFromDB == null) netIncomeFromDB = BigDecimal.ZERO;
-                        if (netLossFromDB == null) netLossFromDB = BigDecimal.ZERO;
-                    }
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            // COST OF GOODS SOLD
+            BigDecimal costOfGoodsSold = accountBalances.getOrDefault("Cost of Goods Sold_DEBIT", BigDecimal.ZERO);
+            if (costOfGoodsSold.compareTo(BigDecimal.ZERO) != 0) {
+                model.addRow(new Object[]{"        Less: Cost of Goods Sold", pesoFormat.format(costOfGoodsSold), ""});
+            } else {
+                model.addRow(new Object[]{"        Less: Cost of Goods Sold", pesoFormat.format(BigDecimal.ZERO), ""});
             }
 
-             for (AccountTitle at : AccountTitle.ACCOUNT_TITLE) {
-                 String name = at.getTitle();
-                 if (equity.contains(name) && !contraEquity.contains(name)) {  
-                     BigDecimal debit = accountBalances.getOrDefault(name + "_DEBIT", BigDecimal.ZERO);
-                     BigDecimal credit = accountBalances.getOrDefault(name + "_CREDIT", BigDecimal.ZERO);
-
-                     if (debit.compareTo(BigDecimal.ZERO) != 0 || credit.compareTo(BigDecimal.ZERO) != 0) {
-                         BigDecimal balance = credit;  
-                         model.addRow(new Object[]{"        " + name, pesoFormat.format(credit), ""});
-                         totalEquity = totalEquity.add(balance);
-                     }
-                 }
-             }
-
-             // 2. Add Net Income
-             if (netIncomeFromDB.compareTo(BigDecimal.ZERO) != 0) {
-                 model.addRow(new Object[]{"        Add: Net Income", pesoFormat.format(netIncomeFromDB), ""});
-                 totalEquity = totalEquity.add(netIncomeFromDB);
-             } else {
-                 model.addRow(new Object[]{"        Add: Net Income", pesoFormat.format(BigDecimal.ZERO), ""});
-             }
-             
-             for (AccountTitle at : AccountTitle.ACCOUNT_TITLE) {
-                 String name = at.getTitle();
-                 if (equity.contains(name) && contraEquity.contains(name)) {  
-                     BigDecimal debit = accountBalances.getOrDefault(name + "_DEBIT", BigDecimal.ZERO);
-
-                     if (debit.compareTo(BigDecimal.ZERO) != 0) {
-                         BigDecimal balance = debit.negate();  
-                         String displayName = "        Less: " + name;
-                         model.addRow(new Object[]{displayName, "(" + pesoFormat.format(debit) + ")", ""});
-                         totalEquity = totalEquity.add(balance); 
-                     }
-                 }
-             }
-
-             // 4. Less Net Loss
-             if (netLossFromDB.compareTo(BigDecimal.ZERO) != 0) {
-                 model.addRow(new Object[]{"        Less: Net Loss", "(" + pesoFormat.format(netLossFromDB) + ")", ""});
-                 totalEquity = totalEquity.subtract(netLossFromDB);
-             } else {
-                 model.addRow(new Object[]{"        Less: Net Loss", pesoFormat.format(BigDecimal.ZERO), ""});
-             }
-
-
-            model.addRow(new Object[]{"    Equity, end", "", pesoFormat.format(totalEquity) + " "});
+            BigDecimal grossProfit = netSales.subtract(costOfGoodsSold);
+            model.addRow(new Object[]{"GROSS PROFIT", "", pesoFormat.format(grossProfit) + " "});
             model.addRow(new Object[]{"", "", ""}); // spacing
 
-            BigDecimal totalLiabilitiesEquity = totalCurrentLiabilities.add(totalNonCurrentLiabilities).add(totalEquity);
-            model.addRow(new Object[]{"TOTAL LIABILITIES & OWNER'S EQUITY", "", pesoFormat.format(totalLiabilitiesEquity) + " "});
+            // OPERATING EXPENSES
+            model.addRow(new Object[]{"OPERATING EXPENSES", "", ""});
+            for (AccountTitle at : AccountTitle.ACCOUNT_TITLE) {
+                String name = at.getTitle();
+                if (expenses.contains(name)) {
+                    BigDecimal debit = accountBalances.getOrDefault(name + "_DEBIT", BigDecimal.ZERO);
+                    if (debit.compareTo(BigDecimal.ZERO) != 0) {
+                        totalExpenses = totalExpenses.add(debit);
+                        model.addRow(new Object[]{"        " + name, pesoFormat.format(debit), ""});
+                    }
+                }
+            }
+            model.addRow(new Object[]{"Total Operating Expenses", "", pesoFormat.format(totalExpenses) + " "});
+            model.addRow(new Object[]{"", "", ""}); // spacing
 
-            // Custom renderer for formatting
-            // Custom renderer for formatting
+            // INCOME BEFORE TAX
+            BigDecimal incomeBeforeTax = grossProfit.subtract(totalExpenses);
+            model.addRow(new Object[]{"INCOME BEFORE TAX", "", pesoFormat.format(incomeBeforeTax) + " "});
+            model.addRow(new Object[]{"", "", ""}); // spacing
+
+            // TAX EXPENSE
+            BigDecimal taxExpense = accountBalances.getOrDefault("Taxes Expense_DEBIT", BigDecimal.ZERO);
+            if (taxExpense.compareTo(BigDecimal.ZERO) != 0) {
+                model.addRow(new Object[]{"        Less: Taxes Expense", pesoFormat.format(taxExpense), ""});
+            } else {
+                model.addRow(new Object[]{"        Less: Taxes Expense", pesoFormat.format(BigDecimal.ZERO), ""});
+            }
+
+            // NET INCOME/LOSS
+            BigDecimal netResult = incomeBeforeTax.subtract(taxExpense);
+            String resultLabel = netResult.compareTo(BigDecimal.ZERO) >= 0 ? "NET INCOME" : "NET LOSS";
+            BigDecimal absResult = netResult.abs();
+
+            model.addRow(new Object[]{resultLabel, "", pesoFormat.format(absResult) + " "});
+
+            // Save to database
+            saveNetIncomeOrLoss(netResult);
+
+            // Apply renderer (same as Statement of Financial Position)
             DefaultTableCellRenderer customRenderer = new DefaultTableCellRenderer() {
                 Font boldFont = new Font("Tahoma", Font.BOLD, 14);
                 Font normalFont = new Font("Tahoma", Font.PLAIN, 14);
 
-                // flags set per-cell in getTableCellRendererComponent, used in paintComponent
                 private boolean drawSingleUnderline = false;
                 private boolean drawDoubleUnderline = false;
 
@@ -391,65 +273,59 @@ public class SFPosition extends javax.swing.JFrame {
                         boolean isSelected, boolean hasFocus, int row, int column) {
                     super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-                    // reset per-cell flags
                     drawSingleUnderline = false;
                     drawDoubleUnderline = false;
 
                     String cellText = value != null ? value.toString() : "";
                     String col0Text = table.getValueAt(row, 0) != null ? table.getValueAt(row, 0).toString() : "";
 
-                    // Reset to defaults
                     setBackground(Color.WHITE);
                     setForeground(Color.BLACK);
                     setFont(normalFont);
                     setBorder(new EmptyBorder(2, 4, 2, 4));
 
-                    // Bold for main headings and sub-headings in column 0
-                    if (column == 0 && (cellText.equals("ASSETS") || 
-                        cellText.equals("LIABILITIES AND OWNER'S EQUITY") ||
-                        cellText.equals("    LIABILITIES") || 
-                        cellText.equals("    EQUITY") ||
-                        cellText.equals("    Current:") ||
-                        cellText.equals("    Non-current:") ||
-                        cellText.equals("    Current:") ||
-                        cellText.equals("    Noncurrent:") ||
-                        cellText.equals("TOTAL ASSETS") ||
-                        cellText.equals("TOTAL LIABILITIES & OWNER'S EQUITY") ||
-                        cellText.equals("    Equity, end"))) {
+                    // Bold for headings
+                    if (column == 0 && (cellText.equals("REVENUE") || 
+                        cellText.equals("GROSS PROFIT") ||
+                        cellText.equals("OPERATING EXPENSES") ||
+                        cellText.equals("INCOME BEFORE TAX") ||
+                        cellText.equals("Net Sales") ||
+                        cellText.equals("Total Operating Expenses") ||
+                        cellText.equals("NET INCOME") ||
+                        cellText.equals("NET LOSS"))) {
                         setFont(boldFont);
                     }
 
-                    // Subtotal / Total logic (single/double underline)
+                    // Subtotals and totals in column 2
                     if (column == 2 && !cellText.isEmpty()) {
-                        if ((col0Text.trim().isEmpty() && !col0Text.equals("    Equity, end")) || col0Text.equals("    Equity, end")) {
+                        if (col0Text.equals("Net Sales") || 
+                            col0Text.equals("GROSS PROFIT") ||
+                            col0Text.equals("Total Operating Expenses") ||
+                            col0Text.equals("INCOME BEFORE TAX")) {
                             setFont(boldFont);
-                            setBackground(new Color(255, 255, 204)); // Light yellow for subtotals
+                            setBackground(new Color(255, 255, 204)); // Light yellow
                             drawSingleUnderline = true;
-                        } else if (col0Text.equals("TOTAL ASSETS") || col0Text.equals("TOTAL LIABILITIES & OWNER'S EQUITY")) {
+                        }
+                        else if (col0Text.equals("NET INCOME") || col0Text.equals("NET LOSS")) {
                             setFont(boldFont);
-                            setBackground(new Color(255, 255, 153)); // Brighter yellow for totals
+                            setBackground(new Color(255, 255, 153)); // Brighter yellow
                             drawDoubleUnderline = true;
                         }
                     }
 
-                    // Alignment
                     if (column == 0) {
                         setHorizontalAlignment(SwingConstants.LEFT);
                     } else {
                         setHorizontalAlignment(SwingConstants.RIGHT);
                     }
 
-                    // Make sure the component text is exactly the amount (no HTML)
                     setText(cellText);
-
                     return this;
                 }
 
                 @Override
                 protected void paintComponent(Graphics g) {
                     super.paintComponent(g);
-
-                    // Only draw underline(s) if requested and there is visible text
                     if (!(drawSingleUnderline || drawDoubleUnderline)) return;
                     String text = getText();
                     if (text == null || text.isEmpty()) return;
@@ -477,6 +353,7 @@ public class SFPosition extends javax.swing.JFrame {
 
                         int textBaseline = (getHeight() + fm.getAscent() - fm.getDescent()) / 2;
                         int y1 = textBaseline + 2;
+
                         if (drawSingleUnderline) {
                             g2.drawLine(x, y1, x + textWidth, y1);
                         } else if (drawDoubleUnderline) {
@@ -492,6 +369,36 @@ public class SFPosition extends javax.swing.JFrame {
             jTable1.getColumnModel().getColumn(0).setCellRenderer(customRenderer);
             jTable1.getColumnModel().getColumn(1).setCellRenderer(customRenderer);
             jTable1.getColumnModel().getColumn(2).setCellRenderer(customRenderer);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveNetIncomeOrLoss(BigDecimal netResult) {
+        String updateQuery = "INSERT INTO project_net_result (project_id, net_income, net_loss) VALUES (?, ?, ?) " +
+                             "ON DUPLICATE KEY UPDATE net_income = ?, net_loss = ?";
+
+        try (Connection conn = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/accountingcycle", "root", "123456789");
+             PreparedStatement ps = conn.prepareStatement(updateQuery)) {
+
+            BigDecimal netIncome = BigDecimal.ZERO;
+            BigDecimal netLoss = BigDecimal.ZERO;
+
+            if (netResult.compareTo(BigDecimal.ZERO) >= 0) {
+                netIncome = netResult;
+            } else {
+                netLoss = netResult.abs();
+            }
+
+            ps.setInt(1, projectId);
+            ps.setBigDecimal(2, netIncome);
+            ps.setBigDecimal(3, netLoss);
+            ps.setBigDecimal(4, netIncome);
+            ps.setBigDecimal(5, netLoss);
+
+            ps.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -531,10 +438,8 @@ public class SFPosition extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setAlwaysOnTop(true);
         setLocation(new java.awt.Point(parentX + 290, parentY + 170));
-        setMaximumSize(new java.awt.Dimension(1014, 560));
         setMinimumSize(new java.awt.Dimension(1014, 560));
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(1014, 560));
         setResizable(false);
         setType(java.awt.Window.Type.UTILITY);
         getContentPane().setLayout(null);
@@ -630,7 +535,7 @@ public class SFPosition extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Statement of Financial Position");
+        jLabel2.setText("Statement of Comprehensive Income (Profit or Loss)");
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);

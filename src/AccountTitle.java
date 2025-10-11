@@ -92,12 +92,17 @@ public class AccountTitle {
         new AccountTitle("Teasury Stock", "Contra-Equity"),
         
         new AccountTitle("Sales Revenue", "Income"),
+        new AccountTitle("Sales Returns", "Contra-Income"),
+        new AccountTitle("Sales Allowances", "Contra-Income"),
+        new AccountTitle("Sales Discounts", "Contra-Income"),   
         new AccountTitle("Service Revenue", "Income"),
         new AccountTitle("Interest Income", "Income"),
         new AccountTitle("Rent Income", "Income"),
         new AccountTitle("Dividend Income", "Income"),
         new AccountTitle("Miscellaneous Income", "Income"),
         new AccountTitle("Gain On Sale of Assets", "Income"),
+        new AccountTitle("Loss On Sale of Assets", "Contra-Income"),
+        
         
         new AccountTitle("Rent Expense", "Expense"),
         new AccountTitle("Salaries Expense", "Expense"),

@@ -23,6 +23,7 @@ public class home extends javax.swing.JFrame {
     private boolean ATBIsOpen = false;
     private boolean doLoadAdjustments = false;
     private boolean SFPisOpen = false;
+    private boolean SPLisOpen = false;
     
     journalEntry je;
     UnadjustTB UTB;
@@ -30,6 +31,7 @@ public class home extends javax.swing.JFrame {
     Adjustments ad;
     AdjustedTB ATB;
     SFPosition SFP;
+    SProfitOrLoss SPL;
     
     /**
      * Creates new form home
@@ -65,6 +67,7 @@ public class home extends javax.swing.JFrame {
         ad = new Adjustments(this, ld);
         ATB = new AdjustedTB(this);
         SFP = new SFPosition(this);
+        SPL = new SProfitOrLoss(this);
         
         
         UTBWindowListener();
@@ -278,23 +281,23 @@ public class home extends javax.swing.JFrame {
         });
         getContentPane().add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 50, -1, -1));
 
-        jButton11.setText("Financial Statement of Profit or Loss");
+        jButton11.setText("Financial Statement of Financial Position");
         jButton11.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton11.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton11ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton11, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 230, 450, 400));
+        getContentPane().add(jButton11, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 210, 450, 400));
 
-        jButton12.setText("Financial Statement of Financial Position");
+        jButton12.setText("Financial Statement of Profit or Loss");
         jButton12.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton12.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton12ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton12, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 230, 450, 400));
+        getContentPane().add(jButton12, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 210, 450, 400));
 
         jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/logout.png"))); // NOI18N
         jButton9.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -433,6 +436,13 @@ public class home extends javax.swing.JFrame {
                     SFP.setVisible(true);  // restore ATB when parent restored
                 }
             }
+            if (SPLisOpen && SPL != null) {
+                if ((e.getNewState() & Frame.ICONIFIED) == Frame.ICONIFIED) {
+                    SPL.setVisible(false); // hide ATB when parent minimized
+                } else if ((e.getNewState() & Frame.NORMAL) == Frame.NORMAL) {
+                    SPL.setVisible(true);  // restore ATB when parent restored
+                }
+            }
         });
     }
 
@@ -482,6 +492,12 @@ public class home extends javax.swing.JFrame {
             SFP.dispose();
             SFP = null;
             SFPisOpen = false;
+            return;
+        }
+        if(SPLisOpen) {
+            SPL.dispose();
+            SPL = null;
+            SPLisOpen = false;
             return;
         }
         JOptionPane.showMessageDialog(null, "You're in the home page already!", "Press OK", JOptionPane.INFORMATION_MESSAGE);
@@ -641,6 +657,12 @@ public class home extends javax.swing.JFrame {
             SFPisOpen = false;
             return;
         }
+        if(SPLisOpen) {
+            SPL.dispose();
+            SPL = null;
+            SPLisOpen = false;
+            return;
+        }
         setVisible(false);
         
         if(!journalEntryUsed) {
@@ -678,6 +700,12 @@ public class home extends javax.swing.JFrame {
             SFP.dispose();
             SFP = null;
             SFPisOpen = false;
+            return;
+        }
+        if(SPLisOpen) {
+            SPL.dispose();
+            SPL = null;
+            SPLisOpen = false;
             return;
         }
         if(!UTBIsOpen) {
@@ -723,6 +751,12 @@ public class home extends javax.swing.JFrame {
             SFP.dispose();
             SFP = null;
             SFPisOpen = false;
+            return;
+        }
+        if(SPLisOpen) {
+            SPL.dispose();
+            SPL = null;
+            SPLisOpen = false;
             return;
         }
         ad.setProjectId(project_key, doLoadAdjustments);
@@ -810,6 +844,12 @@ public class home extends javax.swing.JFrame {
             SFP.dispose();
             SFP = null;
             SFPisOpen = false;
+            return;
+        }
+        if(SPLisOpen) {
+            SPL.dispose();
+            SPL = null;
+            SPLisOpen = false;
             return;
         }
         if (yButton == 0) {
@@ -953,6 +993,12 @@ public class home extends javax.swing.JFrame {
             SFPisOpen = false;
             return;
         }
+        if(SPLisOpen) {
+            SPL.dispose();
+            SPL = null;
+            SPLisOpen = false;
+            return;
+        }
         if(!ledgerIsUsed) {
             ledgerIsUsed = true;
         }
@@ -986,6 +1032,12 @@ public class home extends javax.swing.JFrame {
             SFPisOpen = false;
             return;
         }
+        if(SPLisOpen) {
+            SPL.dispose();
+            SPL = null;
+            SPLisOpen = false;
+            return;
+        }
         if(!ATBIsOpen) {
             if (ATB == null) // ✅ recreate if disposed
                 ATB = new AdjustedTB(this);
@@ -1005,6 +1057,36 @@ public class home extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
+        // TODO add your handling code here:
+        if(yButton == 1) {
+            jButton11.setVisible(false);
+            jButton12.setVisible(false);
+            yButton = 0;
+        }
+        if(!SPLisOpen) {
+            if (SPL == null) //  
+                SPL = new SProfitOrLoss(this);
+            int parentX = this.getX();
+            int parentY = this.getY();
+            int parentWidth = this.getWidth();
+
+            int childWidth = SPL.getWidth();  
+            int centerX = parentX + (parentWidth - childWidth) / 2;
+
+            SPL.setLocation(centerX, parentY + 170);  
+            SPL.setVisible(true); 
+            SPL.setProjectId(project_key);
+            SPL.loadIncomeStatement();
+            SPLisOpen = true;
+        } else {
+            SPL.dispose();
+            SPL = null;
+            SPLisOpen = false;
+        }
+        
+    }//GEN-LAST:event_jButton12ActionPerformed
+
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
         // TODO add your handling code here:
         if(yButton == 1) {
             jButton11.setVisible(false);
@@ -1032,16 +1114,6 @@ public class home extends javax.swing.JFrame {
             SFPisOpen = false;
         }
         
-        
-    }//GEN-LAST:event_jButton12ActionPerformed
-
-    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
-        // TODO add your handling code here:
-        if(yButton == 1) {
-            jButton11.setVisible(false);
-            jButton12.setVisible(false);
-            yButton = 0;
-        }
     }//GEN-LAST:event_jButton11ActionPerformed
       
     /**
